@@ -5,13 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev":"tsx watch ./src/index.ts",
+    "dev": "tsx watch ./src/index.ts",
     "start": "start ./src/index.tx"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@databricks/sql": "^2.2.0",
     "cors": "^2.8.6",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
