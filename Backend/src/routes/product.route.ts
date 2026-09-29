@@ -2,6 +2,7 @@ import { Router } from "express";
 import { queryDatabricks } from "../databricks/sql.js";
 import { CATALOG } from "../config.js";
 import { parseComplaintCategory } from "../utils/complaintCategory.js";
+import { computeHealthStatus, healthLabel } from "../health/rule.js";
 
 const productsRouter = Router()
 
