@@ -88,3 +88,5 @@ productsRouter.get("/products", async (_req, res) => {
     res.status(500).json({ error: message });
   }
 });
+
+export default productsRouter
