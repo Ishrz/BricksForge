@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { env } from "./config.js";
-import healthRouter from "./routes/health.route.js";
+import {healthRouter }from "./routes/health.route.js";
 import productsRouter  from  "./routes/product.route.js"
 import morgan from "morgan";
 

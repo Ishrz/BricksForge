@@ -1,17 +1,17 @@
 import { Router } from "express";
 import { pingDatabricks } from "../databricks/sql.js";
+import { pingLakebase } from "../db/lakebase.js";
 
-const healthRouter = Router()
+export const healthRouter = Router();
 
+healthRouter.get("/health", async (_req, res) => {
+  const [databricksConnected, lakebaseConnected] = await Promise.all([
+    pingDatabricks().catch(() => false),
+    pingLakebase().catch(() => false),
+  ]);
 
-healthRouter.get("/", async (_req,res) => {
-
-    const dataBricksConnected= await pingDatabricks().catch( ()=> false )
-
-    res.status(200).json({
-        ok:dataBricksConnected,
-        result:{dataBricksConnected}
-    })
-})
-
-export default healthRouter
+  res.json({
+    ok: databricksConnected && lakebaseConnected,
+    services: { databricks: databricksConnected, lakebase: lakebaseConnected },
+  });
+});
