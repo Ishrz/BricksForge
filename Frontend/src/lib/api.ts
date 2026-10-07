@@ -18,6 +18,14 @@ export type ProductSummary = {
   flagged: boolean;
 };
 
+export type ProductDetail = ProductSummary & {
+  summary: string;
+  nextStep: string;
+  highlightReview: { text: string; rating: number; sentiment: string } | null;
+  topCategories: { category: string; count: number }[];
+  sentimentBreakdown: { sentiment: string; count: number }[];
+};
+
 async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   const response = await fetch(url, init);
   if (!response.ok) {
@@ -27,7 +35,17 @@ async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-
 export const api = {
-  products: () => fetchJson<{ products: ProductSummary[] }>("/api/products")
+  products: () => fetchJson<{ products: ProductSummary[] }>("/api/products"),
+  product: (productId: string) =>
+    fetchJson<ProductDetail>(`/api/products/${productId}`),
+  setFlag: (productId: string, flagged: boolean) =>
+    fetchJson<{ productId: string; flagged: boolean }>(
+      `/api/products/${productId}/flag`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ flagged }),
+      },
+    ),
 };
