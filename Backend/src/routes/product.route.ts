@@ -2,6 +2,9 @@ import { Router } from "express";
 import { queryDatabricks } from "../databricks/sql.js";
 import { CATALOG } from "../config.js";
 import { parseComplaintCategory } from "../utils/complaintCategory.js";
+import {computeHealthStatus,healthLabel} from "../health/rule.js"
+import { isProductFlaggged } from "../services/flags.js";
+import { getProductInsights } from "../services/brief.js";
 
 export const productsRouter = Router();
 
@@ -123,6 +126,7 @@ productsRouter.get("/products/:productId", async (req, res) => {
       bestPositiveReviewRows,
       flagged,
       productInsights,
+
     ] = await Promise.all([
       queryDatabricks<ProductRow>(
         `
@@ -183,6 +187,10 @@ productsRouter.get("/products/:productId", async (req, res) => {
         ORDER BY review.rating DESC
         LIMIT 1
           `),
+
+      isProductFlaggged(productId),
+
+      getProductInsights(productId),
 
    
     ]);
