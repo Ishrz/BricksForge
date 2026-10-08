@@ -3,7 +3,7 @@ import { queryDatabricks } from "../databricks/sql.js";
 import { CATALOG } from "../config.js";
 import { parseComplaintCategory } from "../utils/complaintCategory.js";
 import {computeHealthStatus,healthLabel} from "../health/rule.js"
-import { isProductFlaggged } from "../services/flags.js";
+import { isProductFlaggged, setProductAsFlaggedProduct } from "../services/flags.js";
 import { getProductInsights } from "../services/brief.js";
 
 export const productsRouter = Router();
@@ -241,6 +241,22 @@ productsRouter.get("/products/:productId", async (req, res) => {
         count: Number(sentimentRow.cnt),
       })),
     });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to load products";
+    res.status(500).json({ error: message });
+  }
+});
+
+productsRouter.put("/products/:productId/flag", async (req, res) => {
+  const flagged = Boolean(req.body?.flagged);
+  try {
+    const updatedFlag = await setProductAsFlaggedProduct(
+      req.params.productId,
+      flagged,
+    );
+
+    res.json({ productId: req.params.productId, flagged: updatedFlag });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to load products";
