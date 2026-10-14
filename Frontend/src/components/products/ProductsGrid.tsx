@@ -1,7 +1,19 @@
+import { PackageSearch } from "lucide-react";
 import type { ProductSummary } from "../../lib/api";
 import { s } from "../../styles/style";
+import { EmptyState } from "../ui/EmptyState";
 import { Skeleton } from "../ui/skeleton";
 import { ProductCard } from "./ProductCard";
+
+function GridSkeleton() {
+  return (
+    <div className={s.grid.root} aria-hidden="true">
+      {Array.from({ length: 8 }).map((_, index) => (
+        <Skeleton key={index} className={s.grid.skeleton} />
+      ))}
+    </div>
+  );
+}
 
 export function ProductsGrid({
   products,
@@ -14,23 +26,32 @@ export function ProductsGrid({
 }) {
   if (loading) {
     return (
-      <div className={s.productsGrid.grid}>
-        {Array.from({ length: 8 }).map((_, index) => (
-          <Skeleton key={index} className={s.productsGrid.skeleton} />
-        ))}
-      </div>
+      <>
+        <span className="sr-only" role="status">
+          Loading products…
+        </span>
+        <GridSkeleton />
+      </>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <EmptyState
+        icon={<PackageSearch className="size-5" aria-hidden="true" />}
+        title="No products match these filters"
+        description="Try a different search term, or clear the health filter to see the full catalogue."
+      />
     );
   }
 
   return (
-    <div className={s.productsGrid.grid}>
-      {products.map((currentProductItem) => (
-        <ProductCard
-          key={currentProductItem.productId}
-          product={currentProductItem}
-          onSelect={onSelect}
-        />
+    <ul className={s.grid.root} role="list">
+      {products.map((product) => (
+        <li key={product.productId} className="h-full">
+          <ProductCard product={product} onSelect={onSelect} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

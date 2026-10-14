@@ -21,13 +21,13 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "compilerOptions":{
-    "baseUrl":".",
-    "paths":{
-      "@/*":["./src/*"]
+
+    /* Path aliases (resolved relative to this config; baseUrl is
+       deprecated in TypeScript 6) */
+    "paths": {
+      "@/*": ["./src/*"]
     }
-  }
   },
-  
+
   "include": ["src"]
 }

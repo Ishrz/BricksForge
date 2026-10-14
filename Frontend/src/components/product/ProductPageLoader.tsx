@@ -1,35 +1,40 @@
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 import { s } from "../../styles/style";
 
-const LOADING_MESSAGES = [
-  "Fetching product from catalog…",
-  "Calculating health score…",
-  "Analyzing sentiment breakdown…",
-  "Scanning complaint themes…",
-  "Generating AI summary…",
-  "Generating AI next step...",
-  "Almost there…",
-];
+function CardSkeleton() {
+  return (
+    <div className={s.loader.card} aria-hidden="true">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-2.5">
+          <Skeleton className={`${s.loader.line} h-4 w-20`} />
+          <Skeleton className={s.loader.lineLg} />
+        </div>
+        <Skeleton className={`${s.loader.line} h-6 w-24 rounded-full`} />
+      </div>
 
-export function ProductPageLoader({ productName }: { productName?: string }) {
-  const [index, setIndex] = useState(0);
+      <Skeleton className={s.loader.block} />
 
-  useEffect(() => {
-    const id = setInterval(
-      () => setIndex((i) => (i + 1) % LOADING_MESSAGES.length),
-      2200,
-    );
-    return () => clearInterval(id);
-  }, []);
+      <div className="flex flex-col gap-2">
+        <Skeleton className={`${s.loader.line} h-2.5 w-full`} />
+        <Skeleton className={`${s.loader.line} h-2.5 w-2/3`} />
+      </div>
 
+      <Skeleton className={`${s.loader.line} mt-auto h-8 w-full`} />
+    </div>
+  );
+}
+
+export function ProductPageLoader() {
   return (
     <div className={s.loader.root}>
-      <Loader2 className={s.loader.spinner} strokeWidth={2} />
-      <div className={s.loader.body}>
-        {productName && <p className={s.loader.productName}>{productName}</p>}
-        <p className={s.loader.message}>{LOADING_MESSAGES[index]}</p>
-        <p className={s.loader.hint}>This usually takes a few seconds</p>
+      <span className="sr-only" role="status">
+        Loading product…
+      </span>
+
+      <div className={s.loader.grid} aria-hidden="true">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <CardSkeleton key={index} />
+        ))}
       </div>
     </div>
   );
