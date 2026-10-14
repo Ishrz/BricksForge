@@ -1,21 +1,24 @@
 import { cn } from "cn";
 import type { HealthStatus } from "../../lib/api";
-import { Badge } from "../ui/badge";
-import { s } from "../../styles/style";
+import { healthTone, s } from "../../styles/style";
 
 export function HealthBadge({
   status,
   label,
+  className,
 }: {
   status: HealthStatus;
   label: string;
+  className?: string;
 }) {
+  const tone = healthTone(status);
+
   return (
-    <Badge
-      variant={"secondary"}
-      className={cn(s.healthBadge.base, s.healthBadge.status[status])}
+    <span
+      className={cn(s.healthBadge.base, tone.badge, tone.ring, className)}
     >
+      <span className={cn(s.healthBadge.dot, tone.dot)} aria-hidden="true" />
       {label}
-    </Badge>
+    </span>
   );
 }

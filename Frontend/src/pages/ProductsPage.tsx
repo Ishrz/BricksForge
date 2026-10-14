@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { AppFooter } from "../components/layout/AppFooter";
 import { AppHeader } from "../components/layout/AppHeader";
 import { AppShell } from "../components/layout/AppShell";
 import { ProductsPanel } from "../components/products/ProductsPanel";
@@ -9,7 +10,10 @@ export function ProductsPage() {
   const navigate = useNavigate();
 
   return (
-    <AppShell header={<AppHeader />}>
+    <AppShell
+      header={<AppHeader />}
+      footer={<AppFooter />}
+    >
       <ProductsPanel
         products={products}
         error={error}
